@@ -83,13 +83,11 @@ function GameController(
     const getActivePlayer = () => activePlayer;
 
     const printNewRound = () => {
-        board.printBoard();
         console.log(`${getActivePlayer().name}'s turn.`);
     };
 
     const playRound = (row, column) => {
         console.log(`Dropping ${getActivePlayer().name}'s token in ${row}, ${column}`);
-        console.log("this is the active player's token: " + getActivePlayer().token);
         board.addToken(row, column, getActivePlayer().token);
 
         // here is where the logic should go for checking whether a player has won the game already
@@ -127,39 +125,32 @@ function ScreenController() {
         playerTurnDiv.textContent = `${activePlayer.name}'s turn...`;
 
         // render the updated board squares
-        board.forEach(row, rowNo => {
-            row.forEach(col, colNo => {
-                const cellbutton = document.createElement("button");
-                cellbutton.classList.add("cell");
+        board.forEach((row, rowNo) => row.forEach((cell, colNo) => {
+            const newCell = document.createElement("button");
+            newCell.classList.add("cell");
+            newCell.dataset.row = rowNo;
+            newCell.dataset.column = colNo;
 
+            const cellContent = cell.getValue();
 
-                // add a dataset to the cell for easier identification
-                cellbutton.dataset.row = rowNo;
-                cellbutton.dataset.column = colNo;
+            if (cellContent == 0) {
+                newCell.innerText = "";
+            } else if (cellContent == 1) {
+                newCell.innerText = "X";
+            } else {
+                newCell.innerText = "O";
+            }
 
-                const cellContent = board[row][col].getValue();
-
-                if (cellContent === 0) {
-                    cellbutton.textContent = '';
-                } else if (cellContent == 1) {
-                    cellbutton.textContent = 'X';
-                } else {
-                    cellbutton.textContent = 'O';
-                };
-                
-
-                boardDiv.appendChild(cellbutton);
-                
-            });
-        });
+            boardDiv.appendChild(newCell);
+        }));
     }
 
     // add an event listener for the board
     function clickHandlerBoard(e) {
-        const selectedRow = e.target.selectedRow.row;
+        const selectedRow = e.target.dataset.row;
         const selectedColumn = e.target.dataset.column;
 
-        if (!selectedRow || !selectedColumn) return;
+        //if (!selectedRow || !selectedColumn) return;
 
         game.playRound(selectedRow, selectedColumn);
         updateScreen();
