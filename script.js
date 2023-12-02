@@ -140,19 +140,25 @@ function ScreenController() {
             } else {
                 newCell.innerText = "O";
             }
-
             boardDiv.appendChild(newCell);
         }));
     }
 
-    // add an event listener for the board
+    // add an event listener for the board. Check that cell is available
     function clickHandlerBoard(e) {
         const selectedRow = e.target.dataset.row;
         const selectedColumn = e.target.dataset.column;
 
-        //if (!selectedRow || !selectedColumn) return;
+        if (game.getBoard()[selectedRow][selectedColumn].getValue() !== 0) {
+            alert('Cell is not available!');
+            return;
+        }
 
+        if (!selectedRow || !selectedColumn) return;
         game.playRound(selectedRow, selectedColumn);
+
+        // implement logic of 
+
         updateScreen();
     }
 
