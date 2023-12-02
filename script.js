@@ -82,23 +82,20 @@ function GameController(
 
     const getActivePlayer = () => activePlayer;
 
-    const printNewRound = () => {
-        console.log(`${getActivePlayer().name}'s turn.`);
-    };
-
     const playRound = (row, column) => {
 
         // change text content
         board.addToken(row, column, getActivePlayer().token);
 
-        // here is where the logic should go for checking whether a player has won the game already
-        // check whether the game has been won
+        // switch the player and print the new round
+        switchPlayerTurn();
+    };
 
-        const activeToken = getActivePlayer().token;
+    const checkWin = () => {
+        // need to get the other player's token as it has been switched
+        const activeToken = getActivePlayer().token == 1 ? 2 : 1;
         const currentLayout = board.getBoard();
-        let win = false;
 
-        // Check for any winning combinations
         if (currentLayout[0][0].getValue() === activeToken && currentLayout[0][1].getValue() === activeToken && currentLayout[0][2].getValue() === activeToken ||
             currentLayout[1][0].getValue() === activeToken && currentLayout[1][1].getValue() === activeToken && currentLayout[1][2].getValue() === activeToken ||
             currentLayout[2][0].getValue() === activeToken && currentLayout[2][1].getValue() === activeToken && currentLayout[2][2].getValue() === activeToken ||
@@ -108,40 +105,22 @@ function GameController(
             currentLayout[0][0].getValue() === activeToken && currentLayout[1][1].getValue() === activeToken && currentLayout[2][2].getValue() === activeToken ||
             currentLayout[0][2].getValue() === activeToken && currentLayout[1][1].getValue() === activeToken && currentLayout[2][0].getValue() === activeToken
         ) {
-            alert(getActivePlayer().name + ' wins!');
-            console.log('Win!');
-            return;
-        };
+            return true;
+        }
 
-
-        // check if the board is full
-        let full = true;
-        board.getBoard().forEach((row) => row.forEach((cell) => {
-            if (cell.getValue() === 0) {
-                full = false;
-            };
-        }));
-
-        if (full) {
-            alert('Board Full!');
-        };
-
-        switchPlayerTurn();
-        printNewRound();
-    }
-
-    printNewRound();
+        return false;
+    };
 
     return {
         playRound,
         getActivePlayer,
+        checkWin,
         getBoard: board.getBoard
     };
 }
 
 function ScreenController() {
-
-    // initialise the consts
+    // initialise the const
     const playerOneDiv = document.querySelector(".player1");
     const playerTwoDiv = document.querySelector(".player2");
     playerTwoDiv.classList.toggle("active");
@@ -190,9 +169,9 @@ function ScreenController() {
         const selectedRow = e.target.dataset.row;
         const selectedColumn = e.target.dataset.column;
 
-
         // Check that cell is available
         if (game.getBoard()[selectedRow][selectedColumn].getValue() !== 0) {
+            // Prompt error message
             alert('Cell is not available!');
             return;
         }
@@ -202,10 +181,22 @@ function ScreenController() {
 
         updateScreen();
 
+        if (game.checkWin()) {
+            // alert win
+            setTimeout(function() {
+                alert(`${game.getActivePlayer().name} wins!`);
+            }, 200);
+
+            // disable all buttons
+            const buttons = document.querySelectorAll('.game-container button');
+            buttons.forEach((button) => {
+                button.disabled = true;
+            });
+        };
+
     }
 
     boardDiv.addEventListener("click", clickHandlerBoard);
-
     updateScreen();
 };
 

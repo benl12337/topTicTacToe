@@ -10,11 +10,12 @@ body {
 
 h1 {
     font-size: larger;
+    font-family: sans-serif;
     color: white;
 }
 
 .player-text {
-    color: rgb(186, 181, 181);
+    color: rgb(207, 207, 207);
     border-radius: 10px;
     font-family: sans-serif;
     padding: 10px;
@@ -43,6 +44,10 @@ h1 {
     font-weight: bolder;
 }
 
+.game-container button:disabled {
+    background-color: red;
+}
+
 button {
     font-family: sans-serif;
     border-radius: 10px;
@@ -57,5 +62,9 @@ button:hover {
 
 .active {
     color: rgb(54, 9, 9);
-    transition: all .75s ease;
+    transition: 1s ease;
+}
+
+.message {
+
 }
