@@ -27,7 +27,7 @@ function Gameboard() {
         for (let i = 0; i < size; i++) {
             boardValues[i] = [];
             for (let j = 0; j < size; j++) {
-                boardValues[i].push(board[i][j].getValue());    const boardDiv = document.querySelector('.game-container');
+                boardValues[i].push(board[i][j].getValue()); const boardDiv = document.querySelector('.game-container');
 
             }
         }
@@ -87,14 +87,48 @@ function GameController(
     };
 
     const playRound = (row, column) => {
-        console.log(`Dropping ${getActivePlayer().name}'s token in ${row}, ${column}`);
+
+        // change text content
         board.addToken(row, column, getActivePlayer().token);
 
         // here is where the logic should go for checking whether a player has won the game already
-        switchPlayerTurn();
-        printNewRound(); 
-    }
+        // check whether the game has been won
 
+        const activeToken = getActivePlayer().token;
+        const currentLayout = board.getBoard();
+        let win = false;
+
+        // Check for any winning combinations
+        if (currentLayout[0][0].getValue() === activeToken && currentLayout[0][1].getValue() === activeToken && currentLayout[0][2].getValue() === activeToken ||
+            currentLayout[1][0].getValue() === activeToken && currentLayout[1][1].getValue() === activeToken && currentLayout[1][2].getValue() === activeToken ||
+            currentLayout[2][0].getValue() === activeToken && currentLayout[2][1].getValue() === activeToken && currentLayout[2][2].getValue() === activeToken ||
+            currentLayout[0][0].getValue() === activeToken && currentLayout[1][0].getValue() === activeToken && currentLayout[2][0].getValue() === activeToken ||
+            currentLayout[0][1].getValue() === activeToken && currentLayout[1][1].getValue() === activeToken && currentLayout[2][1].getValue() === activeToken ||
+            currentLayout[0][2].getValue() === activeToken && currentLayout[1][2].getValue() === activeToken && currentLayout[2][2].getValue() === activeToken ||
+            currentLayout[0][0].getValue() === activeToken && currentLayout[1][1].getValue() === activeToken && currentLayout[2][2].getValue() === activeToken ||
+            currentLayout[0][2].getValue() === activeToken && currentLayout[1][1].getValue() === activeToken && currentLayout[2][0].getValue() === activeToken
+        ) {
+            alert(getActivePlayer().name + ' wins!');
+            console.log('Win!');
+            return;
+        };
+
+
+        // check if the board is full
+        let full = true;
+        board.getBoard().forEach((row) => row.forEach((cell) => {
+            if (cell.getValue() === 0) {
+                full = false;
+            };
+        }));
+
+        if (full) {
+            alert('Board Full!');
+        };
+
+        switchPlayerTurn();
+        printNewRound();
+    }
 
     printNewRound();
 
@@ -108,11 +142,21 @@ function GameController(
 function ScreenController() {
 
     // initialise the consts
+    const playerOneDiv = document.querySelector(".player1");
+    const playerTwoDiv = document.querySelector(".player2");
+    playerTwoDiv.classList.toggle("active");
     const game = GameController();
     const playerTurnDiv = document.querySelector('.turn');
     const boardDiv = document.querySelector('.game-container');
 
     const updateScreen = () => {
+
+        // check if game is won or board is full
+        // make restart button visible
+
+        // change the background colour of the current player
+        playerOneDiv.classList.toggle("active");
+        playerTwoDiv.classList.toggle("active");
 
         // clear the board
         boardDiv.innerText = "";
@@ -120,9 +164,6 @@ function ScreenController() {
         // get the latest version of the board and player turn
         const board = game.getBoard();
         const activePlayer = game.getActivePlayer();
-
-        // display the player's turn 
-        playerTurnDiv.textContent = `${activePlayer.name}'s turn...`;
 
         // render the updated board squares
         board.forEach((row, rowNo) => row.forEach((cell, colNo) => {
@@ -149,17 +190,18 @@ function ScreenController() {
         const selectedRow = e.target.dataset.row;
         const selectedColumn = e.target.dataset.column;
 
+
+        // Check that cell is available
         if (game.getBoard()[selectedRow][selectedColumn].getValue() !== 0) {
             alert('Cell is not available!');
             return;
         }
-
         if (!selectedRow || !selectedColumn) return;
+
         game.playRound(selectedRow, selectedColumn);
 
-        // implement logic of 
-
         updateScreen();
+
     }
 
     boardDiv.addEventListener("click", clickHandlerBoard);
