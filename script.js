@@ -128,6 +128,7 @@ function GameController(
     return {
         playRound,
         getActivePlayer,
+        switchPlayerTurn,
         resetGame,
         checkWin,
         getBoard: board.getBoard
@@ -199,6 +200,7 @@ function ScreenController() {
         if (game.checkWin()) {
             // alert of win
             setTimeout(function () {
+                game.switchPlayerTurn();
                 alert(`${game.getActivePlayer().name} wins!`);
             }, 100);
 
@@ -212,6 +214,7 @@ function ScreenController() {
             restartBtn.addEventListener("click", () => {
                 game.resetGame();
                 updateScreen();
+                restartBtn.style.visibility = "hidden";
             });
         };
 

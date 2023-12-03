@@ -53,7 +53,7 @@ h1 {
 }
 
 .game-container button:disabled {
-    background-color: rgb(236, 188, 188);
+    background-color: rgb(136, 136, 136);
     
 }
 
