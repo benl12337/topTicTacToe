@@ -16,9 +16,7 @@ function Gameboard() {
 
     // checks if a token already exists, and adds player token if not
     const addToken = (row, column, player) => {
-        if (board[row][column].getValue() === 0) {
-            board[row][column].addValue(player);
-        }
+        board[row][column].addValue(player);
     };
 
     // print the board by first pushing values into a new board
@@ -34,7 +32,14 @@ function Gameboard() {
         console.log(boardValues);
     };
 
-    return { getBoard, addToken, printBoard };
+    // reset the board
+    const resetBoard = () => {
+        board.forEach((row, rowNo) => row.forEach((col, colNo) => {
+            board[rowNo][colNo].addValue(0);
+        }))
+    };
+
+    return { getBoard, addToken, printBoard, resetBoard };
 }
 
 // defines the value of the cells
@@ -86,25 +91,34 @@ function GameController(
 
         // change text content
         board.addToken(row, column, getActivePlayer().token);
-
         // switch the player and print the new round
         switchPlayerTurn();
     };
+
+    const resetGame = () => {
+        board.resetBoard();
+    }
 
     const checkWin = () => {
         // need to get the other player's token as it has been switched
         const activeToken = getActivePlayer().token == 1 ? 2 : 1;
         const currentLayout = board.getBoard();
 
-        if (currentLayout[0][0].getValue() === activeToken && currentLayout[0][1].getValue() === activeToken && currentLayout[0][2].getValue() === activeToken ||
-            currentLayout[1][0].getValue() === activeToken && currentLayout[1][1].getValue() === activeToken && currentLayout[1][2].getValue() === activeToken ||
-            currentLayout[2][0].getValue() === activeToken && currentLayout[2][1].getValue() === activeToken && currentLayout[2][2].getValue() === activeToken ||
-            currentLayout[0][0].getValue() === activeToken && currentLayout[1][0].getValue() === activeToken && currentLayout[2][0].getValue() === activeToken ||
-            currentLayout[0][1].getValue() === activeToken && currentLayout[1][1].getValue() === activeToken && currentLayout[2][1].getValue() === activeToken ||
-            currentLayout[0][2].getValue() === activeToken && currentLayout[1][2].getValue() === activeToken && currentLayout[2][2].getValue() === activeToken ||
-            currentLayout[0][0].getValue() === activeToken && currentLayout[1][1].getValue() === activeToken && currentLayout[2][2].getValue() === activeToken ||
-            currentLayout[0][2].getValue() === activeToken && currentLayout[1][1].getValue() === activeToken && currentLayout[2][0].getValue() === activeToken
-        ) {
+        if (currentLayout[0][0].getValue() === activeToken && currentLayout[0][1].getValue() === activeToken && currentLayout[0][2].getValue() === activeToken) {
+            return true;
+        } else if (currentLayout[1][0].getValue() === activeToken && currentLayout[1][1].getValue() === activeToken && currentLayout[1][2].getValue() === activeToken) {
+            return true;
+        } else if (currentLayout[2][0].getValue() === activeToken && currentLayout[2][1].getValue() === activeToken && currentLayout[2][2].getValue() === activeToken) {
+            return true;
+        } else if (currentLayout[0][0].getValue() === activeToken && currentLayout[1][0].getValue() === activeToken && currentLayout[2][0].getValue() === activeToken) {
+            return true;
+        } else if (currentLayout[0][1].getValue() === activeToken && currentLayout[1][1].getValue() === activeToken && currentLayout[2][1].getValue() === activeToken) {
+            return true;
+        } else if (currentLayout[0][2].getValue() === activeToken && currentLayout[1][2].getValue() === activeToken && currentLayout[2][2].getValue() === activeToken) {
+            return true;
+        } else if (currentLayout[0][0].getValue() === activeToken && currentLayout[1][1].getValue() === activeToken && currentLayout[2][2].getValue() === activeToken) {
+            return true;
+        } else if (currentLayout[0][2].getValue() === activeToken && currentLayout[1][1].getValue() === activeToken && currentLayout[2][0].getValue() === activeToken) {
             return true;
         }
 
@@ -114,6 +128,7 @@ function GameController(
     return {
         playRound,
         getActivePlayer,
+        resetGame,
         checkWin,
         getBoard: board.getBoard
     };
@@ -127,11 +142,9 @@ function ScreenController() {
     const game = GameController();
     const playerTurnDiv = document.querySelector('.turn');
     const boardDiv = document.querySelector('.game-container');
+    const restartBtn = document.querySelector('#restart');
 
     const updateScreen = () => {
-
-        // check if game is won or board is full
-        // make restart button visible
 
         // change the background colour of the current player
         playerOneDiv.classList.toggle("active");
@@ -154,10 +167,12 @@ function ScreenController() {
             const cellContent = cell.getValue();
 
             if (cellContent == 0) {
-                newCell.innerText = "";
+                newCell.innerText = "-";
             } else if (cellContent == 1) {
+                newCell.classList.add("playerOne");
                 newCell.innerText = "X";
             } else {
+                newCell.classList.add("playerTwo");
                 newCell.innerText = "O";
             }
             boardDiv.appendChild(newCell);
@@ -182,22 +197,31 @@ function ScreenController() {
         updateScreen();
 
         if (game.checkWin()) {
-            // alert win
-            setTimeout(function() {
+            // alert of win
+            setTimeout(function () {
                 alert(`${game.getActivePlayer().name} wins!`);
-            }, 200);
+            }, 100);
 
             // disable all buttons
             const buttons = document.querySelectorAll('.game-container button');
             buttons.forEach((button) => {
                 button.disabled = true;
             });
+
+            restartBtn.style.visibility = "visible";
+            restartBtn.addEventListener("click", () => {
+                game.resetGame();
+                updateScreen();
+            });
         };
 
     }
-
+    restartBtn.style.visibility = "hidden";
     boardDiv.addEventListener("click", clickHandlerBoard);
     updateScreen();
 };
 
+
+// control the game
 ScreenController();
+
