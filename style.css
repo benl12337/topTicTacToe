@@ -19,14 +19,15 @@ h1 {
     border-radius: 10px;
     font-family: sans-serif;
     padding: 10px;
+
 }
 
 .playerOne {
-    color: rgb(124, 42, 42)
+    color: rgb(124, 42, 42);
 }
 
 .playerTwo {
-    color: rgb(46, 76, 122)
+    color: rgb(46, 76, 122);
 }
 
 .status {
@@ -118,5 +119,5 @@ input {
 }
 
 .hidden {
-    visibility: collapse;
-}
+    display: none;
+}    

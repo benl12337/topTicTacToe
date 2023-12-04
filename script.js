@@ -104,28 +104,28 @@ function GameController(
         const currentLayout = board.getBoard();
 
         if (currentLayout[0][0].getValue() === activeToken && currentLayout[0][1].getValue() === activeToken && currentLayout[0][2].getValue() === activeToken) {
-            alert(1);
+            //alert(1);
             return true;
         } else if (currentLayout[1][0].getValue() === activeToken && currentLayout[1][1].getValue() === activeToken && currentLayout[1][2].getValue() === activeToken) {
-            alert(2);
+            //alert(2);
             return true;
         } else if (currentLayout[2][0].getValue() === activeToken && currentLayout[2][1].getValue() === activeToken && currentLayout[2][2].getValue() === activeToken) {
-            alert(3);
+            //alert(3);
             return true;
         } else if (currentLayout[0][0].getValue() === activeToken && currentLayout[1][0].getValue() === activeToken && currentLayout[2][0].getValue() === activeToken) {
-            alert(4);
+            //alert(4);
             return true;
         } else if (currentLayout[0][1].getValue() === activeToken && currentLayout[1][1].getValue() === activeToken && currentLayout[2][1].getValue() === activeToken) {
-            alert(5);
+            //alert(5);
             return true;
         } else if (currentLayout[0][2].getValue() === activeToken && currentLayout[1][2].getValue() === activeToken && currentLayout[2][2].getValue() === activeToken) {
-            alert(6);
+            //alert(6);
             return true;
         } else if (currentLayout[0][0].getValue() === activeToken && currentLayout[1][1].getValue() === activeToken && currentLayout[2][2].getValue() === activeToken) {
-            alert(7);
+            //alert(7);
             return true;
         } else if (currentLayout[0][2].getValue() === activeToken && currentLayout[1][1].getValue() === activeToken && currentLayout[2][0].getValue() === activeToken) {
-            alert(8);
+            //alert(8);
             return true;
         }
 
@@ -159,23 +159,32 @@ function ScreenController() {
     // initialise the const
     const playerOneDiv = document.querySelector(".player1");
     const playerTwoDiv = document.querySelector(".player2");
-    playerTwoDiv.classList.toggle("active");
     const game = GameController();
-    const playerTurnDiv = document.querySelector('.turn');
+    const statusDiv = document.querySelector('.status');
     const boardDiv = document.querySelector('.game-container');
     const restartBtn = document.querySelector('#restart');
     const submitBtn = document.querySelector('#submit');
+    let pOneName = "";
+    let pTwoName = "";
+    playerOneDiv.classList.toggle("active");
 
-    submitBtn.addEventListener("click", () => {
+    submitBtn.addEventListener("click", (event) => {
+        event.preventDefault();
         if (document.querySelector('#pOneName').value !== "" && document.querySelector('#pTwoName').value !== "") {
-            
+            updateScreen();
+            pOneName = document.querySelector('#pOneName').value;
+            let pTwoName = document.querySelector('#pTwoName').value;
+            playerOneDiv.innerText = pOneName + " (X)";
+            playerTwoDiv.innerText = pTwoName + " (O)";
             document.querySelector('form').classList.add('hidden');
+            boardDiv.classList.toggle('hidden');
+            statusDiv.classList.toggle('hidden');
         };
     });
 
     const updateScreen = () => {
 
-        // change the background colour of the current player
+        // change the font colour of the current player
         playerOneDiv.classList.toggle("active");
         playerTwoDiv.classList.toggle("active");
 
@@ -218,7 +227,7 @@ function ScreenController() {
         restartBtn.addEventListener("click", () => {
             game.resetGame();
             updateScreen();
-            restartBtn.style.visibility = "hidden";
+            restartBtn.classList.toggle('hidden');
         });
     };
 
@@ -227,7 +236,7 @@ function ScreenController() {
         const selectedRow = e.target.dataset.row;
         const selectedColumn = e.target.dataset.column;
 
-        // Check that cell is availa                     alert('Board is full!');   alert('Board is full!');ble
+        // Check that cell is availalable                   
         if (game.getBoard()[selectedRow][selectedColumn].getValue() !== 0) {
             // Prompt error message
             alert('Cell is not available!');
@@ -244,10 +253,11 @@ function ScreenController() {
             setTimeout(function () {
                 game.switchPlayerTurn();
                 alert(`${game.getActivePlayer().name} wins!`);
-            }, 100);
+            }, 200);
 
             // disable all buttons and make restart button visible
             disableBoard();
+            restartBtn.classList.toggle('hidden');
         };
 
         if (game.checkFull()) {
@@ -256,10 +266,10 @@ function ScreenController() {
         };
     }
 
-
-    restartBtn.style.visibility = "hidden";
     boardDiv.addEventListener("click", clickHandlerBoard);
     updateScreen();
+    boardDiv.classList.add('hidden');
+    statusDiv.classList.add('hidden');
 };
 
 
