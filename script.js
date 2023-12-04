@@ -26,7 +26,6 @@ function Gameboard() {
             boardValues[i] = [];
             for (let j = 0; j < size; j++) {
                 boardValues[i].push(board[i][j].getValue()); const boardDiv = document.querySelector('.game-container');
-
             }
         }
         console.log(boardValues);
@@ -105,24 +104,44 @@ function GameController(
         const currentLayout = board.getBoard();
 
         if (currentLayout[0][0].getValue() === activeToken && currentLayout[0][1].getValue() === activeToken && currentLayout[0][2].getValue() === activeToken) {
+            alert(1);
             return true;
         } else if (currentLayout[1][0].getValue() === activeToken && currentLayout[1][1].getValue() === activeToken && currentLayout[1][2].getValue() === activeToken) {
+            alert(2);
             return true;
         } else if (currentLayout[2][0].getValue() === activeToken && currentLayout[2][1].getValue() === activeToken && currentLayout[2][2].getValue() === activeToken) {
+            alert(3);
             return true;
         } else if (currentLayout[0][0].getValue() === activeToken && currentLayout[1][0].getValue() === activeToken && currentLayout[2][0].getValue() === activeToken) {
+            alert(4);
             return true;
         } else if (currentLayout[0][1].getValue() === activeToken && currentLayout[1][1].getValue() === activeToken && currentLayout[2][1].getValue() === activeToken) {
+            alert(5);
             return true;
         } else if (currentLayout[0][2].getValue() === activeToken && currentLayout[1][2].getValue() === activeToken && currentLayout[2][2].getValue() === activeToken) {
+            alert(6);
             return true;
         } else if (currentLayout[0][0].getValue() === activeToken && currentLayout[1][1].getValue() === activeToken && currentLayout[2][2].getValue() === activeToken) {
+            alert(7);
             return true;
         } else if (currentLayout[0][2].getValue() === activeToken && currentLayout[1][1].getValue() === activeToken && currentLayout[2][0].getValue() === activeToken) {
+            alert(8);
             return true;
         }
 
         return false;
+    };
+
+    const checkFull = () => {
+        // search for a blank cell
+        for (let row = 0; row < 3; row++) {
+            for (let col = 0; col < 3; col++) {
+                if (board.getBoard()[row][col].getValue() === 0) {
+                    return false;
+                }
+            }
+        }
+        return true;
     };
 
     return {
@@ -131,6 +150,7 @@ function GameController(
         switchPlayerTurn,
         resetGame,
         checkWin,
+        checkFull,
         getBoard: board.getBoard
     };
 }
@@ -144,6 +164,14 @@ function ScreenController() {
     const playerTurnDiv = document.querySelector('.turn');
     const boardDiv = document.querySelector('.game-container');
     const restartBtn = document.querySelector('#restart');
+    const submitBtn = document.querySelector('#submit');
+
+    submitBtn.addEventListener("click", () => {
+        if (document.querySelector('#pOneName').value !== "" && document.querySelector('#pTwoName').value !== "") {
+            
+            document.querySelector('form').classList.add('hidden');
+        };
+    });
 
     const updateScreen = () => {
 
@@ -180,12 +208,26 @@ function ScreenController() {
         }));
     }
 
+    const disableBoard = () => {
+        const buttons = document.querySelectorAll('.game-container button');
+        buttons.forEach((button) => {
+            button.disabled = true;
+        });
+
+        restartBtn.style.visibility = "visible";
+        restartBtn.addEventListener("click", () => {
+            game.resetGame();
+            updateScreen();
+            restartBtn.style.visibility = "hidden";
+        });
+    };
+
     // add an event listener for the board. Check that cell is available
     function clickHandlerBoard(e) {
         const selectedRow = e.target.dataset.row;
         const selectedColumn = e.target.dataset.column;
 
-        // Check that cell is available
+        // Check that cell is availa                     alert('Board is full!');   alert('Board is full!');ble
         if (game.getBoard()[selectedRow][selectedColumn].getValue() !== 0) {
             // Prompt error message
             alert('Cell is not available!');
@@ -204,21 +246,17 @@ function ScreenController() {
                 alert(`${game.getActivePlayer().name} wins!`);
             }, 100);
 
-            // disable all buttons
-            const buttons = document.querySelectorAll('.game-container button');
-            buttons.forEach((button) => {
-                button.disabled = true;
-            });
-
-            restartBtn.style.visibility = "visible";
-            restartBtn.addEventListener("click", () => {
-                game.resetGame();
-                updateScreen();
-                restartBtn.style.visibility = "hidden";
-            });
+            // disable all buttons and make restart button visible
+            disableBoard();
         };
 
+        if (game.checkFull()) {
+            // disable buttons and make restart button visible
+            disableBoard();
+        };
     }
+
+
     restartBtn.style.visibility = "hidden";
     boardDiv.addEventListener("click", clickHandlerBoard);
     updateScreen();

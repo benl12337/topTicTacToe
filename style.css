@@ -54,7 +54,7 @@ h1 {
 
 .game-container button:disabled {
     background-color: rgb(136, 136, 136);
-    
+
 }
 
 .winningCombo {
@@ -79,8 +79,44 @@ button:hover {
 }
 
 #restart {
-    padding: 10px;
+    padding: 15px;
     margin-top: 20px;
     font-size: 2rem;
     background-color: rgb(223, 223, 238);
+}
+
+dialog {
+    border-radius: 10px;
+}
+
+form {
+    border: 1px solid white;
+    border-radius: 20px;
+    padding: 20px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-family: sans-serif;
+    padding-right: 15px;
+}
+
+input {
+    border-radius: 10px;
+}
+
+.input-row {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#submit {
+    margin: 20px;
+    font-size: 1rem;
+}
+
+.hidden {
+    visibility: collapse;
 }

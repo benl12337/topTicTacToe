@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=The content-visibility property accepts several values, but auto is the one that provides immediate performance improvements. An element that has content-visibility: auto gains layout, style and paint containment. If the element is off-screen (and not otherwise relevant to the user—relevant elements would be the ones that have focus or selection in their subtree), it also gains size containment (and it stops painting and hit-testing its contents).
+
+    1.0">
     <title>TIC-TAC-TOE</title>
     <script src="script.js" defer></script>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <h1>TIC-TAC-TOE</h1>
+        <form id="names-input">
+            <div class="input-row"><label for="pOneName">Player 1</label><input type="text" id="pOneName" required></div>
+            <div class="input-row"><label for="pTwoName">Player 2</label><input type="text" id="pTwoName" required></div>
+            <button type="submit" id="submit">Start!</button>
+        </form>
     <div class="status">
         <div class="player-text player1">Player One (X)</div>
         <div class="player-text player2">Player Two (O)</div>
@@ -20,4 +29,5 @@
     </div>
     <div class="message"></div>
 </body>
+
 </html>
