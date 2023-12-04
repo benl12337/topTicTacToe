@@ -102,10 +102,12 @@ form {
 label {
     font-family: sans-serif;
     padding-right: 15px;
+    font-weight: bolder;
 }
 
 input {
     border-radius: 10px;
+    padding: 10px;
 }
 
 .input-row {

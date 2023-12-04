@@ -184,10 +184,6 @@ function ScreenController() {
 
     const updateScreen = () => {
 
-        // change the font colour of the current player
-        playerOneDiv.classList.toggle("active");
-        playerTwoDiv.classList.toggle("active");
-
         // clear the board
         boardDiv.innerText = "";
 
@@ -258,12 +254,17 @@ function ScreenController() {
             // disable all buttons and make restart button visible
             disableBoard();
             restartBtn.classList.toggle('hidden');
-        };
-
-        if (game.checkFull()) {
+        } else if (game.checkFull()) {
             // disable buttons and make restart button visible
             disableBoard();
-        };
+        } else {
+
+            // change the font colour of the current player
+            playerOneDiv.classList.toggle("active");
+            playerTwoDiv.classList.toggle("active");
+            
+        }
+
     }
 
     boardDiv.addEventListener("click", clickHandlerBoard);
