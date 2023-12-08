@@ -61,6 +61,15 @@ function GameController(
     playerTwoName = "Player Two"
 ) {
 
+    const addNameOne = (name) => {
+        players[0].name = name;
+    };
+
+    const addNameTwo = (name) => {
+        players[1].name = name;
+    };
+
+
     // create the gameboard
     const board = Gameboard();
 
@@ -96,6 +105,7 @@ function GameController(
 
     const resetGame = () => {
         board.resetBoard();
+        activePlayer = players[0];
     }
 
     const checkWin = () => {
@@ -145,6 +155,8 @@ function GameController(
     };
 
     return {
+        addNameOne,
+        addNameTwo,
         playRound,
         getActivePlayer,
         switchPlayerTurn,
@@ -174,6 +186,8 @@ function ScreenController() {
             updateScreen();
             pOneName = document.querySelector('#pOneName').value;
             let pTwoName = document.querySelector('#pTwoName').value;
+            game.addNameOne(pOneName);
+            game.addNameTwo(pTwoName);
             playerOneDiv.innerText = pOneName + " (X)";
             playerTwoDiv.innerText = pTwoName + " (O)";
             document.querySelector('form').classList.add('hidden');
@@ -189,7 +203,7 @@ function ScreenController() {
 
         // get the latest version of the board and player turn
         const board = game.getBoard();
-        const activePlayer = game.getActivePlayer();
+        let activePlayer = game.getActivePlayer();
 
         // render the updated board squares
         board.forEach((row, rowNo) => row.forEach((cell, colNo) => {
@@ -219,11 +233,13 @@ function ScreenController() {
             button.disabled = true;
         });
 
-        restartBtn.style.visibility = "visible";
+        //restartBtn.style.visibility = "visible";
         restartBtn.addEventListener("click", () => {
+            playerOneDiv.classList.add("active");
+            playerTwoDiv.classList.remove("active");
             game.resetGame();
             updateScreen();
-            restartBtn.classList.toggle('hidden');
+            restartBtn.classList.add('hidden');
         });
     };
 
@@ -249,14 +265,16 @@ function ScreenController() {
             setTimeout(function () {
                 game.switchPlayerTurn();
                 alert(`${game.getActivePlayer().name} wins!`);
-            }, 200);
+            }, 50);
 
             // disable all buttons and make restart button visible
+            restartBtn.classList.remove('hidden');
             disableBoard();
-            restartBtn.classList.toggle('hidden');
+
         } else if (game.checkFull()) {
             // disable buttons and make restart button visible
             disableBoard();
+            restartBtn.classList.toggle('hidden');
         } else {
 
             // change the font colour of the current player
