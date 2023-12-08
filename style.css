@@ -120,6 +120,12 @@ input {
     font-size: 1rem;
 }
 
+.message {
+    font-family: sans-serif;
+    font-size: 2rem;
+    color: white;
+}
+
 .hidden {
     display: none;
 }    

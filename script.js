@@ -176,6 +176,7 @@ function ScreenController() {
     const boardDiv = document.querySelector('.game-container');
     const restartBtn = document.querySelector('#restart');
     const submitBtn = document.querySelector('#submit');
+    const messageDiv = document.querySelector(".message");
     let pOneName = "";
     let pTwoName = "";
     playerOneDiv.classList.toggle("active");
@@ -197,6 +198,8 @@ function ScreenController() {
     });
 
     const updateScreen = () => {
+        messageDiv.innerText = '';
+
 
         // clear the board
         boardDiv.innerText = "";
@@ -262,11 +265,11 @@ function ScreenController() {
 
         if (game.checkWin()) {
             // alert of win
-            setTimeout(function () {
-                game.switchPlayerTurn();
-                alert(`${game.getActivePlayer().name} wins!`);
-            }, 50);
+            game.switchPlayerTurn();
+            messageDiv.innerText = `${game.getActivePlayer().name} wins!`;
 
+
+            messageDiv.innerText = `${game.getActivePlayer().name} wins!`;
             // disable all buttons and make restart button visible
             restartBtn.classList.remove('hidden');
             disableBoard();
@@ -274,13 +277,12 @@ function ScreenController() {
         } else if (game.checkFull()) {
             // disable buttons and make restart button visible
             disableBoard();
-            restartBtn.classList.toggle('hidden');
+            messageDiv.innerText = 'Tie!';
+            restartBtn.classList.remove('hidden');
         } else {
-
             // change the font colour of the current player
             playerOneDiv.classList.toggle("active");
             playerTwoDiv.classList.toggle("active");
-            
         }
 
     }
