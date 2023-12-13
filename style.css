@@ -31,6 +31,20 @@ h1 {
     color: rgb(46, 76, 122);
 }
 
+@keyframes fadein {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.playerOne p,
+.playerTwo p {
+    animation: 1s ease fadein;
+}
+
 .status {
     width: 50%;
     max-width: 400px;
@@ -133,3 +147,9 @@ input {
 .hidden {
     display: none;
 }    
+
+.cell {
+    box-sizing: border-box;
+    width: 100%;
+    height: 100%;
+}

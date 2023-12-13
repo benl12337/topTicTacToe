@@ -211,6 +211,7 @@ function ScreenController() {
         // render the updated board squares
         board.forEach((row, rowNo) => row.forEach((cell, colNo) => {
             const newCell = document.createElement("button");
+            let newCellText = document.createElement("p");
             newCell.classList.add("cell");
             newCell.dataset.row = rowNo;
             newCell.dataset.column = colNo;
@@ -218,14 +219,15 @@ function ScreenController() {
             const cellContent = cell.getValue();
 
             if (cellContent == 0) {
-                newCell.innerText = "-";
+                newCellText.innerText = "-"
             } else if (cellContent == 1) {
                 newCell.classList.add("playerOne");
-                newCell.innerText = "X";
+                newCellText.innerText = "X";
             } else {
                 newCell.classList.add("playerTwo");
-                newCell.innerText = "O";
+                newCellText.innerText = "O";
             }
+            newCell.appendChild(newCellText);
             boardDiv.appendChild(newCell);
         }));
     }
@@ -267,8 +269,6 @@ function ScreenController() {
             // alert of win
             game.switchPlayerTurn();
             messageDiv.innerText = `${game.getActivePlayer().name} wins!`;
-
-
             messageDiv.innerText = `${game.getActivePlayer().name} wins!`;
             // disable all buttons and make restart button visible
             restartBtn.classList.remove('hidden');
@@ -286,7 +286,7 @@ function ScreenController() {
         }
 
     }
-
+    
     boardDiv.addEventListener("click", clickHandlerBoard);
     updateScreen();
     boardDiv.classList.add('hidden');
