@@ -295,6 +295,6 @@ function ScreenController() {
 
 
 // control the game
-const test = "hi";
+const test = "test";
 ScreenController();
 
